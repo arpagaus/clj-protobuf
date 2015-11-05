@@ -1,0 +1,6 @@
+
+# protoc.exe Simple.proto --decode=Person < simple.bin
+
+message Person {
+  required int32 age = 1;
+}
