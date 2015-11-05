@@ -45,9 +45,9 @@ userType ::= ( "."? ident )+
 
 constant ::= ident | intLit | floatLit | strLit | boolLit
 
-ident ::= #"[A-Za-z_][\w_]*"
+ident ::= #"[A-Za-z_][\\w_]*"
 
-camelIdent ::= #"[A-Z][\w_]*"
+camelIdent ::= #"[A-Z][\\w_]*"
 
 intLit ::= decInt | hexInt | octInt
 
