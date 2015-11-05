@@ -1,7 +1,8 @@
 (ns app.test.parser
   (:use [app.parser])
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:require [instaparse.print :as instap]))
 
 (deftest parsdef
-  (is (= as-and-bs ("tree")))
+  (is  (.contains  ( instap/Parser->str protobuf-gramma ) "hexEscape"  ))
   )

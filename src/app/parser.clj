@@ -3,6 +3,5 @@
 
 
 
-(def as-and-bs
-  (insta/parser
-    "proto.ebnf"))
+(def protobuf-gramma
+  (insta/parser "proto.ebnf"))
