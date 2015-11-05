@@ -1,3 +1,13 @@
-name: "Thomas"
+
+name: "Any One"
 age: 88
-email: "thomasstauffer@anything.com"
+email: "any.one@anywhere.com"
+phone {
+	number: "123456789"
+	type: 1
+}
+phone {
+	number: "987654321"
+	type: 2
+}
+
