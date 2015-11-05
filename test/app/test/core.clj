@@ -7,8 +7,9 @@
   (is (= 7 (+ 3 4)))
   (is (= 5 (protobuf-load 5))))
 
-(deftest protobuf-load-simple
-  (is (= (protobuf-load (byte-array [(byte 0x08)
-                                     (byte 0x96)
-                                     (byte 0x01)]))
-         150)))
+(deftest protobuf-dump-test
+  (is (= (seq (byte-array [(unchecked-byte 0x08)
+                      (unchecked-byte 0x96)
+                      (unchecked-byte 0x01)]))
+         (protobuf-dump {:age 150}))))
+
