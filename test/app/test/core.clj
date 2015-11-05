@@ -21,4 +21,4 @@
 
 (deftest protobuf-compute-size-test
   (is (= 3 (protobuf-compute-size simple-schema simple-message)))
-  (is (= 4 (protobuf-compute-size simple-schema {:age 150}))))
+  (is (= 4 (protobuf-compute-size simple-schema {:age 32767}))))
