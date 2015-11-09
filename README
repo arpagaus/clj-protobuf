@@ -1,13 +1,15 @@
-# app
 
-FIXME: write description
+## protoc Usages
 
-## Usage
+Convert text reperesentation to binary representation:
+```
+protoc.exe person.proto --encode=Person < person.txt
+```
+Convert text reperesentation to binary representation:
+```
+protoc.exe simple.proto --decode=Person < simple.bin
+```
 
-FIXME: write
+## Thanks
 
-## License
-
-Copyright (C) 2015 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+- http://www.meetup.com/hackergarten-luzern/
