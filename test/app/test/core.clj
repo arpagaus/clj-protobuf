@@ -7,18 +7,32 @@
   (is (= 7 (+ 3 4)))
   (is (= 5 (protobuf-load 5))))
 
-(def simple-schema
-     {:type :message
-      :name "Person"
-      :content [{:type :int32 :name "age" :tag 1}]})
-(def simple-message {:age 150})
+;; schema and message with a single attribute
+(def schema-single
+  {:type :message
+   :name "Person"
+   :content [{:type :int32 :name "age" :tag 1}]})
+
+;; schema and message with multiple attributes
+(def schema-multiple
+  {:type :message
+   :name "Person"
+   :content [{:type :int32 :name "age" :tag 1}
+             {:type :string :name "name" :tag 2}]})
 
 (deftest protobuf-dump-test
   (is (= (seq (byte-array [(unchecked-byte 0x08)
-                      (unchecked-byte 0x96)
-                      (unchecked-byte 0x01)]))
-         (protobuf-dump simple-schema simple-message))))
+                           (unchecked-byte 0x96)
+                           (unchecked-byte 0x01)]))
+         (protobuf-dump schema-single {:age 150}))))
 
 (deftest protobuf-compute-size-test
-  (is (= 3 (protobuf-compute-size simple-schema simple-message)))
-  (is (= 4 (protobuf-compute-size simple-schema {:age 32767}))))
+  (is (= 2 (protobuf-compute-size schema-single {:age 127})))
+  (is (= 3 (protobuf-compute-size schema-single {:age 128})))
+  (is (= 3 (protobuf-compute-size schema-single {:age 16383})))
+  (is (= 4 (protobuf-compute-size schema-single {:age 16384})))
+  (is (= 2 (protobuf-compute-size schema-single {:name "a"}))) ;; fix
+  )
+
+
+(run-tests)
