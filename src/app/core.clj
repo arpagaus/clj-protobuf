@@ -4,11 +4,25 @@
 (defn protobuf-load [data] 5)
 
 (defn protobuf-dump
-      [schema m]
-      (seq (byte-array [(unchecked-byte 0x08)
-                   (unchecked-byte 0x96)
-                   (unchecked-byte 0x01)])))
+  [schema m]
+  (seq (byte-array [(unchecked-byte 0x08)
+                    (unchecked-byte 0x96)
+                    (unchecked-byte 0x01)])))
+
+(defn protobuf-compute-attribute-size
+  [type tag value]
+  (case type
+    :int32 (CodedOutputStream/computeInt32Size tag value)
+    :string (CodedOutputStream/computeStringSize tag value)
+    ))
 
 (defn protobuf-compute-size
   [schema message]
-  (CodedOutputStream/computeInt32Size 1 (:age message)))
+  (let [message-name (:message (meta message))
+        message-schema (some #(when (= message-name (:name %)) (:content %)) schema)]
+    (reduce +
+            (map (fn [x]
+                   (let [attribute-name (name x)
+                         attribute-schema (some #(when (= attribute-name (:name %)) %) message-schema)]
+                     (protobuf-compute-attribute-size (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message))))
+                 (keys message)))))
