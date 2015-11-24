@@ -12,7 +12,10 @@
 (defn protobuf-compute-attribute-size
   [type tag value]
   (case type
+    :double (CodedOutputStream/computeDoubleSize tag value)
+    :float (CodedOutputStream/computeFloatSize tag value)
     :int32 (CodedOutputStream/computeInt32Size tag value)
+    :int64 (CodedOutputStream/computeInt64Size tag value)
     :string (CodedOutputStream/computeStringSize tag value)
     ))
 

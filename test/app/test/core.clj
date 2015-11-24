@@ -31,11 +31,31 @@
 (deftest protobuf-compute-size-test
   (is (= 2 (protobuf-compute-size schema-single (with-meta {:age 127} message-person))))
   (is (= 3 (protobuf-compute-size schema-single (with-meta  {:age 128} message-person))))
-  (is (= 3 (protobuf-compute-size schema-single (with-meta  {:age 16383} message-person))))
-  (is (= 4 (protobuf-compute-size schema-single (with-meta  {:age 16384} message-person))))
   (is (= 3 (protobuf-compute-size schema-multiple (with-meta  {:name "a"} message-person))))
-  (is (= 4 (protobuf-compute-size schema-multiple (with-meta  {:name "ab"} message-person))))
-  (is (= 5 (protobuf-compute-size schema-multiple (with-meta  {:name "äb"} message-person))))
+  (is (= 5 (protobuf-compute-size schema-multiple (with-meta  {:name "a" :age 127} message-person))))
+  (is (= 8 (protobuf-compute-size schema-multiple (with-meta  {:name "xyz" :age 128} message-person))))
   )
 
-;;(run-tests)
+
+;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
+;;      | "sint32" | "sint64" | "fixed32" | "fixed64" | "sfixed32" | "sfixed64"
+;;      | "bool" | "string" | "bytes" | messageType | enumType
+
+(deftest protobuf-compute-attribute-size-test
+  (is (= 9 (protobuf-compute-attribute-size :double 1 1.0)))
+  (is (= 5 (protobuf-compute-attribute-size :float 1 1.0)))
+  (is (= 2 (protobuf-compute-attribute-size :int32 1 127)))
+  (is (= 3 (protobuf-compute-attribute-size :int32 1  128)))
+  (is (= 3 (protobuf-compute-attribute-size :int32 1  16383)))
+  (is (= 4 (protobuf-compute-attribute-size :int32 1  16384)))
+  (is (= 4 (protobuf-compute-attribute-size :int32 1  16384)))
+  (is (= 2 (protobuf-compute-attribute-size :int64 1 127)))
+  (is (= 4 (protobuf-compute-attribute-size :int64 1  16384)))
+  (is (= 3 (protobuf-compute-attribute-size :string 1 "a")))
+  (is (= 4 (protobuf-compute-attribute-size :string 1 "ab")))
+  (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
+  (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
+  )
+
+
+(run-tests)
