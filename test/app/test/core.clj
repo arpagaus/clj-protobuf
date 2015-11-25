@@ -40,7 +40,7 @@
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
 ;;      | "sint32" | "sint64" | "fixed32" | "fixed64" | "sfixed32" | "sfixed64"
 ;;      | "bool" | "string" | "bytes" | messageType | enumType
-
+;; https://developers.google.com/protocol-buffers/docs/proto#scalar
 (deftest protobuf-compute-attribute-size-test
   (is (= 9 (protobuf-compute-attribute-size :double 1 1.0)))
   (is (= 5 (protobuf-compute-attribute-size :float 1 1.0)))
@@ -48,9 +48,20 @@
   (is (= 3 (protobuf-compute-attribute-size :int32 1  128)))
   (is (= 3 (protobuf-compute-attribute-size :int32 1  16383)))
   (is (= 4 (protobuf-compute-attribute-size :int32 1  16384)))
-  (is (= 4 (protobuf-compute-attribute-size :int32 1  16384)))
   (is (= 2 (protobuf-compute-attribute-size :int64 1 127)))
   (is (= 4 (protobuf-compute-attribute-size :int64 1  16384)))
+  (is (= 2 (protobuf-compute-attribute-size :uint32 1 127)))
+  (is (= 3 (protobuf-compute-attribute-size :uint32 1  128)))
+  (is (= 2 (protobuf-compute-attribute-size :uint64 1 127)))
+  (is (= 4 (protobuf-compute-attribute-size :uint64 1  16384)))
+  (is (= 2 (protobuf-compute-attribute-size :sint32 1 63)))
+  (is (= 3 (protobuf-compute-attribute-size :sint32 1  64)))
+  (is (= 3 (protobuf-compute-attribute-size :sint32 1  -127))) ;; TODO find byte change
+  (is (= 3 (protobuf-compute-attribute-size :sint32 1  -128)))
+  (is (= 2 (protobuf-compute-attribute-size :sint64 1 63)))
+  (is (= 3 (protobuf-compute-attribute-size :sint64 1  64)))
+  (is (= 3 (protobuf-compute-attribute-size :sint64 1  -127))) ;; TODO find byte change
+  (is (= 3 (protobuf-compute-attribute-size :sint64 1  -128)))
   (is (= 3 (protobuf-compute-attribute-size :string 1 "a")))
   (is (= 4 (protobuf-compute-attribute-size :string 1 "ab")))
   (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))

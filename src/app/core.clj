@@ -16,6 +16,10 @@
     :float (CodedOutputStream/computeFloatSize tag value)
     :int32 (CodedOutputStream/computeInt32Size tag value)
     :int64 (CodedOutputStream/computeInt64Size tag value)
+    :uint32 (CodedOutputStream/computeUInt32Size tag value)
+    :uint64 (CodedOutputStream/computeUInt64Size tag value)
+    :sint32 (CodedOutputStream/computeSInt32Size tag value)
+    :sint64 (CodedOutputStream/computeSInt64Size tag value)
     :string (CodedOutputStream/computeStringSize tag value)
     ))
 
