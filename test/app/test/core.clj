@@ -56,16 +56,22 @@
   (is (= 4 (protobuf-compute-attribute-size :uint64 1  16384)))
   (is (= 2 (protobuf-compute-attribute-size :sint32 1 63)))
   (is (= 3 (protobuf-compute-attribute-size :sint32 1  64)))
-  (is (= 3 (protobuf-compute-attribute-size :sint32 1  -127))) ;; TODO find byte change
-  (is (= 3 (protobuf-compute-attribute-size :sint32 1  -128)))
+  (is (= 2 (protobuf-compute-attribute-size :sint32 1  -64)))
+  (is (= 3 (protobuf-compute-attribute-size :sint32 1  -65)))
   (is (= 2 (protobuf-compute-attribute-size :sint64 1 63)))
   (is (= 3 (protobuf-compute-attribute-size :sint64 1  64)))
-  (is (= 3 (protobuf-compute-attribute-size :sint64 1  -127))) ;; TODO find byte change
-  (is (= 3 (protobuf-compute-attribute-size :sint64 1  -128)))
+  (is (= 2 (protobuf-compute-attribute-size :sint64 1  -64)))
+  (is (= 3 (protobuf-compute-attribute-size :sint64 1  -65)))
+  (is (= 5 (protobuf-compute-attribute-size :fixed32 1 42)))
+  (is (= 9 (protobuf-compute-attribute-size :fixed64 1 42)))
+  (is (= 2 (protobuf-compute-attribute-size :bool 1 false)))
+  (is (= 2 (protobuf-compute-attribute-size :bool 1 true)))
   (is (= 3 (protobuf-compute-attribute-size :string 1 "a")))
   (is (= 4 (protobuf-compute-attribute-size :string 1 "ab")))
   (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
   (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
+  (is (= 3 (protobuf-compute-attribute-size :bytes 1 (byte-array [(unchecked-byte 0xff)]))))
+  (is (= 4 (protobuf-compute-attribute-size :bytes 1 (byte-array [(unchecked-byte 0xff) (unchecked-byte 0xee)]))))
   )
 
 

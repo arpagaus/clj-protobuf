@@ -1,5 +1,5 @@
 (ns app.core
-  (:import (com.google.protobuf CodedOutputStream)))
+  (:import (com.google.protobuf CodedOutputStream ByteString)))
 
 (defn protobuf-load [data] 5)
 
@@ -20,7 +20,11 @@
     :uint64 (CodedOutputStream/computeUInt64Size tag value)
     :sint32 (CodedOutputStream/computeSInt32Size tag value)
     :sint64 (CodedOutputStream/computeSInt64Size tag value)
+    :fixed32 (CodedOutputStream/computeFixed32Size tag value)
+    :fixed64 (CodedOutputStream/computeFixed64Size tag value)
+    :bool (CodedOutputStream/computeBoolSize tag value)
     :string (CodedOutputStream/computeStringSize tag value)
+    :bytes (CodedOutputStream/computeBytesSize tag (ByteString/copyFrom value))
     ))
 
 (defn protobuf-compute-size
