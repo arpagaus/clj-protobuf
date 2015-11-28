@@ -1,4 +1,5 @@
-# app
+# Protocol Buffers for Clojure
+[![Build Status](https://travis-ci.org/arpagaus/clj-protobuf.svg?branch=master)](https://travis-ci.org/arpagaus/clj-protobuf)
 
 FIXME: write description
 
@@ -15,6 +16,6 @@ FIXME: write
 
 ## License
 
-Copyright (C) 2015 FIXME
+Copyright (C) 2015 Remo Arpagaus
 
 Distributed under the Eclipse Public License, the same as Clojure.
