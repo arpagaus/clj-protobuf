@@ -22,7 +22,7 @@
     :content [{:type :int32 :name "age" :tag 1}
               {:type :string :name "name" :tag 2}]}])
 
-(deftest protobuf-dump-test
+(deftest protobuf-dump-simple-test
   (is (= (seq (byte-array [(unchecked-byte 0x08)
                            (unchecked-byte 0x96)
                            (unchecked-byte 0x01)]))
