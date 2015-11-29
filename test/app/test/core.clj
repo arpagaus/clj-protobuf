@@ -7,7 +7,7 @@
   (is (= 7 (+ 3 4)))
   (is (= 5 (protobuf-load 5))))
 
-(def message-person {:message "Person"})
+(def message-meta-person {:message "Person"})
 
 ;; schema and message with a single attribute
 (def schema-single
@@ -15,27 +15,76 @@
     :name "Person"
     :content [{:type :int32 :name "age" :tag 1}]}])
 
-;; schema and message with multiple attributes
-(def schema-multiple
-  [{:type :message
-    :name "Person"
-    :content [{:type :int32 :name "age" :tag 1}
-              {:type :string :name "name" :tag 2}]}])
-
 (deftest protobuf-dump-simple-test
   (is (= (seq (byte-array [(unchecked-byte 0x08)
                            (unchecked-byte 0x96)
                            (unchecked-byte 0x01)]))
-         (protobuf-dump schema-single (with-meta {:age 150} message-person)))))
+         (protobuf-dump schema-single (with-meta {:age 150} message-meta-person)))))
+
+
+;; schema and message with multiple attributes
+(def schema-multiple
+  [{:type :message
+    :name "Person"
+    :content [{:type :string :name "name" :tag 1}
+              {:type :int32 :name "age" :tag 2}
+              {:type :string :name "email" :tag 3}]}])
+
+(deftest protobuf-dump-multiple-test
+  (is (= (seq (byte-array [(unchecked-byte 0x0a)
+                           (unchecked-byte 0x0d)
+                           (unchecked-byte 0x52)
+                           (unchecked-byte 0x65)
+                           (unchecked-byte 0x6d)
+                           (unchecked-byte 0x6f)
+                           (unchecked-byte 0x20)
+                           (unchecked-byte 0x41)
+                           (unchecked-byte 0x72)
+                           (unchecked-byte 0x70)
+                           (unchecked-byte 0x61)
+                           (unchecked-byte 0x67)
+                           (unchecked-byte 0x61)
+                           (unchecked-byte 0x75)
+                           (unchecked-byte 0x73)
+                           (unchecked-byte 0x10)
+                           (unchecked-byte 0x71)
+                           (unchecked-byte 0x1a)
+                           (unchecked-byte 0x17)
+                           (unchecked-byte 0x61)
+                           (unchecked-byte 0x72)
+                           (unchecked-byte 0x70)
+                           (unchecked-byte 0x61)
+                           (unchecked-byte 0x67)
+                           (unchecked-byte 0x61)
+                           (unchecked-byte 0x75)
+                           (unchecked-byte 0x73)
+                           (unchecked-byte 0x2e)
+                           (unchecked-byte 0x72)
+                           (unchecked-byte 0x65)
+                           (unchecked-byte 0x6d)
+                           (unchecked-byte 0x6f)
+                           (unchecked-byte 0x40)
+                           (unchecked-byte 0x67)
+                           (unchecked-byte 0x6d)
+                           (unchecked-byte 0x61)
+                           (unchecked-byte 0x69)
+                           (unchecked-byte 0x6c)
+                           (unchecked-byte 0x2e)
+                           (unchecked-byte 0x63)
+                           (unchecked-byte 0x6f)
+                           (unchecked-byte 0x6d)
+                           ]))
+         (protobuf-dump schema-multiple (with-meta {:name "Remo Arpagaus"
+                                                    :age 113
+                                                    :email "arpagaus.remo@gmail.com"} message-meta-person)))))
 
 (deftest protobuf-compute-size-test
-  (is (= 2 (protobuf-compute-size schema-single (with-meta {:age 127} message-person))))
-  (is (= 3 (protobuf-compute-size schema-single (with-meta  {:age 128} message-person))))
-  (is (= 3 (protobuf-compute-size schema-multiple (with-meta  {:name "a"} message-person))))
-  (is (= 5 (protobuf-compute-size schema-multiple (with-meta  {:name "a" :age 127} message-person))))
-  (is (= 8 (protobuf-compute-size schema-multiple (with-meta  {:name "xyz" :age 128} message-person))))
+  (is (= 2 (protobuf-compute-size schema-single (with-meta {:age 127} message-meta-person))))
+  (is (= 3 (protobuf-compute-size schema-single (with-meta  {:age 128} message-meta-person))))
+  (is (= 3 (protobuf-compute-size schema-multiple (with-meta  {:name "a"} message-meta-person))))
+  (is (= 5 (protobuf-compute-size schema-multiple (with-meta  {:name "a" :age 127} message-meta-person))))
+  (is (= 8 (protobuf-compute-size schema-multiple (with-meta  {:name "xyz" :age 128} message-meta-person))))
   )
-
 
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
 ;;      | "sint32" | "sint64" | "fixed32" | "fixed64" | "sfixed32" | "sfixed64"

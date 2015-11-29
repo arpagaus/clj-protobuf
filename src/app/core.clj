@@ -39,6 +39,7 @@
   [type tag value stream]
   (case type
     :int32 (.writeInt32 stream tag value)
+    :string (.writeString stream tag value)
     ))
 
 (defn protobuf-dump-stream
