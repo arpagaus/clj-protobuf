@@ -1,11 +1,58 @@
 (ns app.test.core
   (:use [app.core])
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:import (com.google.protobuf CodedOutputStream ByteString)))
 
-(deftest addition
-  (is (= 4 (+ 2 2)))
-  (is (= 7 (+ 3 4)))
-  (is (= 5 (protobuf-load 5))))
+(def multiple-data
+  (byte-array [(unchecked-byte 0x0a)
+               (unchecked-byte 0x0d)
+               (unchecked-byte 0x52)
+               (unchecked-byte 0x65)
+               (unchecked-byte 0x6d)
+               (unchecked-byte 0x6f)
+               (unchecked-byte 0x20)
+               (unchecked-byte 0x41)
+               (unchecked-byte 0x72)
+               (unchecked-byte 0x70)
+               (unchecked-byte 0x61)
+               (unchecked-byte 0x67)
+               (unchecked-byte 0x61)
+               (unchecked-byte 0x75)
+               (unchecked-byte 0x73)
+               (unchecked-byte 0x10)
+               (unchecked-byte 0x71)
+               (unchecked-byte 0x1a)
+               (unchecked-byte 0x17)
+               (unchecked-byte 0x61)
+               (unchecked-byte 0x72)
+               (unchecked-byte 0x70)
+               (unchecked-byte 0x61)
+               (unchecked-byte 0x67)
+               (unchecked-byte 0x61)
+               (unchecked-byte 0x75)
+               (unchecked-byte 0x73)
+               (unchecked-byte 0x2e)
+               (unchecked-byte 0x72)
+               (unchecked-byte 0x65)
+               (unchecked-byte 0x6d)
+               (unchecked-byte 0x6f)
+               (unchecked-byte 0x40)
+               (unchecked-byte 0x67)
+               (unchecked-byte 0x6d)
+               (unchecked-byte 0x61)
+               (unchecked-byte 0x69)
+               (unchecked-byte 0x6c)
+               (unchecked-byte 0x2e)
+               (unchecked-byte 0x63)
+               (unchecked-byte 0x6f)
+               (unchecked-byte 0x6d)
+               ]))
+
+(def single-data
+  (byte-array [(unchecked-byte 0x08)
+               (unchecked-byte 0x96)
+               (unchecked-byte 0x01)]))
+
 
 (def message-meta-person {:message "Person"})
 
@@ -16,9 +63,7 @@
     :content [{:type :int32 :name "age" :tag 1}]}])
 
 (deftest protobuf-dump-simple-test
-  (is (= (seq (byte-array [(unchecked-byte 0x08)
-                           (unchecked-byte 0x96)
-                           (unchecked-byte 0x01)]))
+  (is (= (seq single-data)
          (protobuf-dump schema-single (with-meta {:age 150} message-meta-person)))))
 
 
@@ -31,49 +76,7 @@
               {:type :string :name "email" :tag 3}]}])
 
 (deftest protobuf-dump-multiple-test
-  (is (= (seq (byte-array [(unchecked-byte 0x0a)
-                           (unchecked-byte 0x0d)
-                           (unchecked-byte 0x52)
-                           (unchecked-byte 0x65)
-                           (unchecked-byte 0x6d)
-                           (unchecked-byte 0x6f)
-                           (unchecked-byte 0x20)
-                           (unchecked-byte 0x41)
-                           (unchecked-byte 0x72)
-                           (unchecked-byte 0x70)
-                           (unchecked-byte 0x61)
-                           (unchecked-byte 0x67)
-                           (unchecked-byte 0x61)
-                           (unchecked-byte 0x75)
-                           (unchecked-byte 0x73)
-                           (unchecked-byte 0x10)
-                           (unchecked-byte 0x71)
-                           (unchecked-byte 0x1a)
-                           (unchecked-byte 0x17)
-                           (unchecked-byte 0x61)
-                           (unchecked-byte 0x72)
-                           (unchecked-byte 0x70)
-                           (unchecked-byte 0x61)
-                           (unchecked-byte 0x67)
-                           (unchecked-byte 0x61)
-                           (unchecked-byte 0x75)
-                           (unchecked-byte 0x73)
-                           (unchecked-byte 0x2e)
-                           (unchecked-byte 0x72)
-                           (unchecked-byte 0x65)
-                           (unchecked-byte 0x6d)
-                           (unchecked-byte 0x6f)
-                           (unchecked-byte 0x40)
-                           (unchecked-byte 0x67)
-                           (unchecked-byte 0x6d)
-                           (unchecked-byte 0x61)
-                           (unchecked-byte 0x69)
-                           (unchecked-byte 0x6c)
-                           (unchecked-byte 0x2e)
-                           (unchecked-byte 0x63)
-                           (unchecked-byte 0x6f)
-                           (unchecked-byte 0x6d)
-                           ]))
+  (is (= (seq multiple-data)
          (protobuf-dump schema-multiple (with-meta {:name "Remo Arpagaus"
                                                     :age 113
                                                     :email "arpagaus.remo@gmail.com"} message-meta-person)))))
@@ -123,5 +126,18 @@
   (is (= 4 (protobuf-compute-attribute-size :bytes 1 (byte-array [(unchecked-byte 0xff) (unchecked-byte 0xee)]))))
   )
 
+(defn protobuf-dump-attribute-single
+  "Encodes any given value for a single attribute to a byte buffer, assuming tag 1"
+  [type value]
+    (let [buffer (byte-array (protobuf-compute-attribute-size type 1 value))
+        output-stream (CodedOutputStream/newInstance buffer)]
+      (do
+        (protobuf-dump-attribute type 1 value output-stream)
+        (seq buffer))))
+
+(deftest protobuf-dump-attribute-test
+  (is (= (seq single-data) (protobuf-dump-attribute-single :int32 150)))
+  ;; TODO add more types
+  )
 
 (run-tests)
