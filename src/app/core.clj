@@ -38,6 +38,8 @@
 (defn protobuf-dump-attribute
   [type tag value stream]
   (case type
+    :double (.writeDouble stream tag value)
+    :float (.writeFloat stream tag value)
     :int32 (.writeInt32 stream tag value)
     :string (.writeString stream tag value)
     ))
