@@ -41,7 +41,16 @@
     :double (.writeDouble stream tag value)
     :float (.writeFloat stream tag value)
     :int32 (.writeInt32 stream tag value)
+    :int64 (.writeInt64 stream tag value)
+    :uint32 (.writeUInt32 stream tag value)
+    :uint64 (.writeUInt64 stream tag value)
+    :sint32 (.writeSInt32 stream tag value)
+    :sint64 (.writeSInt64 stream tag value)
+    :fixed32 (.writeFixed32 stream tag value)
+    :fixed64 (.writeFixed64 stream tag value)
+    :bool (.writeBool stream tag value)
     :string (.writeString stream tag value)
+    :bytes (.writeBytes stream tag (ByteString/copyFrom value))
     ))
 
 (defn protobuf-dump-stream

@@ -80,14 +80,14 @@
   (is (= 4 (protobuf-compute-attribute-size :string 1 "ab")))
   (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
   (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
-  (is (= 3 (protobuf-compute-attribute-size :bytes 1 (byte-array [(unchecked-byte 0xff)]))))
-  (is (= 4 (protobuf-compute-attribute-size :bytes 1 (byte-array [(unchecked-byte 0xff) (unchecked-byte 0xee)]))))
+  (is (= 3 (protobuf-compute-attribute-size :bytes 1 (unchecked-byte-array [0xff]))))
+  (is (= 4 (protobuf-compute-attribute-size :bytes 1 (unchecked-byte-array [0xff 0xee]))))
   )
 
 (defn protobuf-dump-attribute-single
-  "Encodes any given value for a single attribute to a byte buffer, assuming tag 1"
+  "Encodes any given value for a single attribute to a byte buffer, assuming tag < 16"
   [type value]
-    (let [buffer (byte-array (protobuf-compute-attribute-size type 1 value))
+    (let [buffer (byte-array (protobuf-compute-attribute-size type 15 value))
         output-stream (CodedOutputStream/newInstance buffer)]
       (do
         (protobuf-dump-attribute type 1 value output-stream)
@@ -99,9 +99,24 @@
   (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :int32 0)))
   (is (= (seq (unchecked-byte-array [0x08 0x7f])) (protobuf-dump-attribute-single :int32 127)))
   (is (= (seq (unchecked-byte-array [0x08 0x80 0x01])) (protobuf-dump-attribute-single :int32 128)))
-  (is (= (seq single-data) (protobuf-dump-attribute-single :int32 150)))
-  ;; TODO add more types
+  (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :int64 0)))
+  (is (= (seq (unchecked-byte-array [0x08 0x7f])) (protobuf-dump-attribute-single :int64 127)))
+  (is (= (seq (unchecked-byte-array [0x08 0x80 0x01])) (protobuf-dump-attribute-single :int64 128)))
+  (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :uint32 0)))
+  (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :uint64 0)))
+  (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :sint32 0)))
+  (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :sint64 0)))
+  (is (= (seq (unchecked-byte-array [0x0d 0x00 0x00 0x00 0x00])) (protobuf-dump-attribute-single :fixed32 0)))
+  (is (= (seq (unchecked-byte-array [0x09 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00])) (protobuf-dump-attribute-single :fixed64 0)))
+  (is (= (seq (unchecked-byte-array [0x08 0x00])) (protobuf-dump-attribute-single :bool false)))
+  (is (= (seq (unchecked-byte-array [0x08 0x01])) (protobuf-dump-attribute-single :bool true)))
+  (is (= (seq (unchecked-byte-array [0x0a 0x01 0x61])) (protobuf-dump-attribute-single :string "a")))
+  (is (= (seq (unchecked-byte-array [0x0a 0x01 0x62])) (protobuf-dump-attribute-single :string "b")))
+  (is (= (seq (unchecked-byte-array [0x0a 0x03 0x61 0x62 0x63])) (protobuf-dump-attribute-single :string "abc")))
+  (is (= (seq (unchecked-byte-array [0x0a 0x03 0x61 0x62 0x63])) (protobuf-dump-attribute-single :string "abc")))
+  (is (= (seq (unchecked-byte-array [0x0a 0x01 0x00])) (protobuf-dump-attribute-single :bytes (unchecked-byte-array [0x00]))))
+  (is (= (seq (unchecked-byte-array [0x0a 0x04 0xca 0xfe 0xba 0xbe])) (protobuf-dump-attribute-single :bytes (unchecked-byte-array [0xca 0xfe 0xba 0xbe]))))
   )
 
-;; Only used in Ligth Table
+;; Only used in Ligth Table. As a result Leinigen runs tests twice.
 (run-tests)
