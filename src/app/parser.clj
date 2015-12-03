@@ -4,4 +4,4 @@
 
 
 (def protobuf-gramma
-  (insta/parser "proto.ebnf" :auto-whitespace :standard ))
+  (insta/parser "resources/proto.ebnf" :auto-whitespace :standard ))
