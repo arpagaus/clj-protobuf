@@ -1,3 +1,0 @@
-name: "Remo Arpagaus"
-age: 113
-email: "arpagaus.remo@gmail.com"

@@ -1,5 +1,7 @@
 syntax = "proto2";
 
 message Person {
-  required int32 age = 1;
+	required string name = 1;
+	required int32 age = 2;
+	required string email = 3;
 }

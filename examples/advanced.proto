@@ -19,8 +19,6 @@ message Person {
 	repeated Phone phone = 4;
 }
 
-repeated Phone phone = 4;
-
 message AnyMessage {
 	required string anystring = 1;
 }

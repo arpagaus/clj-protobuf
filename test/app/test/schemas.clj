@@ -1,13 +1,23 @@
 
-(def schema-single
+(def schema-trivial
   [{:type :message
     :name "Person"
     :content [{:type :int32 :name "age" :tag 1}]}])
 
+(def schema-simple
+  [{:type :message
+    :name "Person"
+    :content
+      [{:type :string :name "name" :tag 1}
+      {:type :int32 :name "age" :tag 2}
+      {:type :int32 :name "email" :tag 3}]}])
+
+;; TODO schema-intermediate
+
 (def schema-advanced [
   {:type :message :name "Person" :content [
     {:label :required :name "name" :type :string :tag 1}
-    {:label :required :name "id" :type :int32 :tag 2}
+    {:label :required :name "age" :type :int32 :tag 2}
     {:label :required :name "email" :type :string :tag 3}
     {:name "Phone" :type :message :content [
       {:name "PhoneType" :type :enum :content [
