@@ -1,3 +1,5 @@
+(* https://github.com/Shimuuar/protobuf/blob/master/protobuf.ebnf *)
+
 proto  ::= ( message | extend | enum | import | package | option | ";" )*
 
 import ::= "import" strLit ";"
