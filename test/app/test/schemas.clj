@@ -1,16 +1,17 @@
+(ns app.test.schemas)
 
 (def schema-trivial
   [{:type :message
     :name "Person"
-    :content [{:type :int32 :name "age" :tag 1}]}])
+    :content [{:label :required :type :int32 :name "age" :tag 1}]}])
 
 (def schema-simple
   [{:type :message
     :name "Person"
     :content
-      [{:type :string :name "name" :tag 1}
-      {:type :int32 :name "age" :tag 2}
-      {:type :int32 :name "email" :tag 3}]}])
+      [{:label :required :type :string :name "name" :tag 1}
+      {:label :required :type :int32 :name "age" :tag 2}
+      {:label :required :type :int32 :name "email" :tag 3}]}])
 
 ;; TODO schema-intermediate
 
@@ -31,6 +32,6 @@
     {:label :repeated :name "phone" :type "Phone" :tag 4}
   ] }
   {:type :message :name "AnyMessage" :content [
-    {:label :required :type :string :tag 1}
+    {:label :required :name "anystring" :type :string :tag 1}
   ] }
 ])
