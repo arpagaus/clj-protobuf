@@ -1,7 +1,9 @@
 # Protocol Buffers for Clojure
 [![Build Status](https://travis-ci.org/arpagaus/clj-protobuf.svg?branch=master)](https://travis-ci.org/arpagaus/clj-protobuf)
 
-FIXME: write description
+**Disclaimer**: This project is a work in progress. Please use the issue tracker to report any questions, enhancements or issues you encounter.
+
+This library aims to provide a pure Clojure implementation for reading and writing Google's binary [Protocol Buffer](https://developers.google.com/protocol-buffers) format. Currently there exists already a library [clojure-protobuf](https://github.com/ninjudd/clojure-protobuf) for this which is based on generated Java classes. Please use that library for now if you need Protocol Buffer support in Clojure.
 
 ## Usage
 
@@ -15,7 +17,7 @@ FIXME: write
   - Introduction by Mark Engelberg: https://www.youtube.com/watch?v=b2AUW6psVcE
 
 ## Background
-We are a small group of people, more or less regularly meeting each other at the [Hackergarten](http://hackergarten.net) in [Lucerne](http://www.meetup.com/hackergarten-luzern).
+We are a small group of individuals, coming together once a month at the [Hackergarten in Lucerne, Switzerland](http://www.meetup.com/hackergarten-luzern).
 
 We choose to implement a clojure library for the [Google Protocol Buffer](https://developers.google.com/protocol-buffers). There is already an existing clojure [library](https://github.com/ninjudd/clojure-protobuf). Despite this, we are working on our own version for the following reasons:
 
