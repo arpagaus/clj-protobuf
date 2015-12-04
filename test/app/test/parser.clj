@@ -1,10 +1,7 @@
 (ns app.test.parser
   (:use [app.parser])
-  (:use [clojure.test])
-  (:require [instaparse.print :as instap]))
+  (:use [clojure.test]))
 
+;; does not really test anything just if the protobuf-gramma basically works
 (deftest parsdef
-  (do (println (protobuf-gramma "message Person {required int32 age = 1;}") )
-    (is (.contains (instap/Parser->str protobuf-gramma) "hexEscape"))
-    )
-  )
+  (is (= ((protobuf-gramma "message Person {required int32 age = 1;}") 0) :proto)))
