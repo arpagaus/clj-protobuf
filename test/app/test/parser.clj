@@ -1,7 +1,22 @@
 (ns app.test.parser
   (:use [app.parser])
+  (:use [app.test.schemas])
+  (:use [app.schemaloaddump])
+  (:use [clojure.pprint])
   (:use [clojure.test]))
 
-;; does not really test anything just if the protobuf-gramma basically works
-(deftest parsdef
-  (is (= ((protobuf-gramma "message Person {required int32 age = 1;}") 0) :proto)))
+(def schema-simple-text (slurp "examples/simple.proto"))
+
+(def schema-advanced-text (slurp "examples/advanced.proto"))
+
+;; does not really test anything, just if the protobuf-parser basically works
+(deftest test-protobuf-parser
+  (is (= ((protobuf-parser schema-simple-text) 0) :proto)))
+
+(deftest test-schemas
+  (is (= (protobuf-schema-load schema-simple-text) schema-simple))
+  (is (= (protobuf-schema-load schema-advanced-text) schema-advanced)))
+
+
+;(println (protobuf-schema-load schema-advanced-text))
+;(println schema-advanced)
