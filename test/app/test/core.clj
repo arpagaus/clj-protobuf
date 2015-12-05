@@ -1,5 +1,6 @@
 (ns app.test.core
   (:use [app.core])
+  (:use [app.test.schemas])
   (:use [clojure.test])
   (:import (com.google.protobuf CodedOutputStream ByteString)))
 
@@ -14,37 +15,22 @@
 
 (def message-meta-person {:message "Person"})
 
-;; schema and message with a single attribute
-(def schema-single
-  [{:type :message
-    :name "Person"
-    :content [{:type :int32 :name "age" :tag 1}]}])
-
 (deftest protobuf-dump-simple-test
   (is (= (seq single-data)
-         (protobuf-dump schema-single (with-meta {:age 150} message-meta-person)))))
-
-
-;; schema and message with multiple attributes
-(def schema-multiple
-  [{:type :message
-    :name "Person"
-    :content [{:type :string :name "name" :tag 1}
-              {:type :int32 :name "age" :tag 2}
-              {:type :string :name "email" :tag 3}]}])
+         (protobuf-dump schema-trivial (with-meta {:age 150} message-meta-person)))))
 
 (deftest protobuf-dump-multiple-test
   (is (= (seq multiple-data)
-         (protobuf-dump schema-multiple (with-meta {:name "Remo Arpagaus"
-                                                    :age 113
-                                                    :email "arpagaus.remo@gmail.com"} message-meta-person)))))
+         (protobuf-dump schema-simple (with-meta {:name "Remo Arpagaus"
+                                                  :age 113
+                                                  :email "arpagaus.remo@gmail.com"} message-meta-person)))))
 
 (deftest protobuf-compute-size-test
-  (is (= 2 (protobuf-compute-size schema-single (with-meta {:age 127} message-meta-person))))
-  (is (= 3 (protobuf-compute-size schema-single (with-meta  {:age 128} message-meta-person))))
-  (is (= 3 (protobuf-compute-size schema-multiple (with-meta  {:name "a"} message-meta-person))))
-  (is (= 5 (protobuf-compute-size schema-multiple (with-meta  {:name "a" :age 127} message-meta-person))))
-  (is (= 8 (protobuf-compute-size schema-multiple (with-meta  {:name "xyz" :age 128} message-meta-person))))
+  (is (= 2 (protobuf-compute-size schema-trivial (with-meta {:age 127} message-meta-person))))
+  (is (= 3 (protobuf-compute-size schema-trivial (with-meta  {:age 128} message-meta-person))))
+  (is (= 3 (protobuf-compute-size schema-simple (with-meta  {:name "a"} message-meta-person))))
+  (is (= 5 (protobuf-compute-size schema-simple (with-meta  {:name "a" :age 127} message-meta-person))))
+  (is (= 8 (protobuf-compute-size schema-simple (with-meta  {:name "xyz" :age 128} message-meta-person))))
   )
 
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
@@ -87,11 +73,11 @@
 (defn protobuf-dump-attribute-single
   "Encodes any given value for a single attribute to a byte buffer, assuming tag < 16"
   [type value]
-    (let [buffer (byte-array (protobuf-compute-attribute-size type 15 value))
+  (let [buffer (byte-array (protobuf-compute-attribute-size type 15 value))
         output-stream (CodedOutputStream/newInstance buffer)]
-      (do
-        (protobuf-dump-attribute type 1 value output-stream)
-        (seq buffer))))
+    (do
+      (protobuf-dump-attribute type 1 value output-stream)
+      (seq buffer))))
 
 (deftest protobuf-dump-attribute-test
   (is (= (seq (unchecked-byte-array [0x09 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00])) (protobuf-dump-attribute-single :double (Double/MIN_VALUE))))
@@ -119,4 +105,4 @@
   )
 
 ;; Only used in Ligth Table. As a result Leinigen runs tests twice.
-(run-tests)
+;; (run-tests)
