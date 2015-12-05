@@ -10,54 +10,47 @@ option ::= "option" optionBody ";"
 
 optionBody ::= ident ( "." ident )* "=" constant
 
-message ::= "message" ident messageBody
+message ::= <"message"> ident messageBody
 
-extend ::= "extend" userType messageBody
+extend ::= <"extend"> userType messageBody
 
-enum ::= "enum" ident "{" ( option | enumField | ";" )* "}"
+enum ::= <"enum"> ident <"{"> ( option | enumField | ";" )* <"}">
 
-enumField ::= ident "=" intLit ";"
+enumField ::= ident <"="> intLit <";">
 
 service ::= "service" ident "{" ( option | rpc | ";" )* "}"
 
 rpc ::= "rpc" ident "(" userType ")" "returns" "(" userType ")" ";"
 
-messageBody ::= "{" ( field | enum | message | extend | extensions |
-group | option | ":" )* "}"
+<messageBody> ::= <"{"> ( field | enum | message | extend | extensions | group | option | ":" )* <"}">
 
-group ::= modifier "group" camelIdent "=" intLit messageBody
+group ::= modifier "group" camelIdent <"="> intLit messageBody
 
-
-field ::= modifier type ident "=" intLit ( "[" fieldOption ( ","
-fieldOption )* "]" )? ";"
+field ::= modifier type ident <"="> intLit ( "[" fieldOption ( "," fieldOption )* "]" )? <";">
 
 fieldOption ::= optionBody | "default" "=" constant
 
 extensions ::= "extensions" intLit "to" ( intLit | "max" ) ";"
 
-modifier ::= "required" | "optional" | "repeated"
+<modifier> ::= "required" | "optional" | "repeated"
 
-type ::= "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
-       | "sint32" | "sint64" | "fixed32" | "fixed64" | "sfixed32" |
-"sfixed64"
-       | "bool" | "string" | "bytes" | userType
-
+<type> ::= userType | "double" | "float" | "int32" | "int64" | "uint32" | "uint64" | "sint32" | "sint64" | "fixed32" | "fixed64" | "sfixed32" | "sfixed64" | "bool" | "string" | "bytes"
 
 userType ::= ( "."? ident )+
 
 constant ::= ident | intLit | floatLit | strLit | boolLit
 
-ident ::= #"[A-Za-z_][A-Za-z0-9_]*"
+<ident> ::= #"[A-Za-z_][A-Za-z0-9_]*"
 
 camelIdent ::= #"[A-Z]\\w_]*"
 
-intLit ::= decInt | hexInt | octInt
+<intLit> ::= decInt | hexInt | octInt
 
-decInt ::= #"\d+"
+<decInt> ::= #"\d+"
 
-hexInt ::= #"0[xX]([A-Fa-f0-9])+"
+<hexInt> ::= #"0[xX]([A-Fa-f0-9])+"
 
-octInt ::= #"0[0-7]+"
+<octInt> ::= #"0[0-7]+"
 
 floatLit ::= #"\d+(\.\d+)?([Ee][\+-]?\d+)?"
 

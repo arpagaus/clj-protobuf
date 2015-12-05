@@ -3,7 +3,6 @@ message Person {
 	required string name = 1;
 	required int32 age = 2;
 	required string email = 3;
-
 	message Phone {
 		enum PhoneType {
 			MOBILE = 1;
@@ -13,9 +12,6 @@ message Person {
 		required string number = 1;
 		required PhoneType type = 2;
 	}
-	
-	// repeated PhoneType PhoneTypeTest = 4; -> error -> wrong namespace
-	// repeated phone phone = 4; -> error -> types and name share the same namespace
 	repeated Phone phone = 4;
 }
 

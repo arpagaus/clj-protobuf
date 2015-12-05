@@ -6,12 +6,12 @@
     :content [{:label :required :type :int32 :name "age" :tag 1}]}])
 
 (def schema-simple
-  [{:type :message
-    :name "Person"
+  [{:name "Person"
+    :type :message
     :content
       [{:label :required :type :string :name "name" :tag 1}
       {:label :required :type :int32 :name "age" :tag 2}
-      {:label :required :type :int32 :name "email" :tag 3}]}])
+      {:label :required :type :string :name "email" :tag 3}]}])
 
 ;; TODO schema-intermediate
 
