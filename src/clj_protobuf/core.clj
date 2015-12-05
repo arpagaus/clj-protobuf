@@ -1,4 +1,4 @@
-(ns app.core
+(ns clj-protobuf.core
   (:import (com.google.protobuf CodedOutputStream ByteString)))
 
 (defn protobuf-load [data] 5)

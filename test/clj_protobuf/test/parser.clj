@@ -1,7 +1,7 @@
-(ns app.test.parser
-  (:use [app.parser])
-  (:use [app.test.schemas])
-  (:use [app.schemaloaddump])
+(ns clj-protobuf.test.parser
+  (:use [clj-protobuf.parser])
+  (:use [clj-protobuf.test.schemas])
+  (:use [clj-protobuf.schemaloaddump])
   (:use [clojure.pprint])
   (:use [clojure.test]))
 

@@ -1,5 +1,5 @@
-(ns app.schemaloaddump
-  (:use [app.parser]))
+(ns clj-protobuf.schemaloaddump
+  (:use [clj-protobuf.parser]))
 
 (defn tab [n]
   (apply str (repeat n "\t")))

@@ -1,4 +1,4 @@
-(ns app.parser
+(ns clj-protobuf.parser
   (:require [instaparse.core :as insta]))
 
 (def protobuf-parser

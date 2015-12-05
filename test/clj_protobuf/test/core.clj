@@ -1,6 +1,6 @@
-(ns app.test.core
-  (:use [app.core])
-  (:use [app.test.schemas])
+(ns clj-protobuf.test.core
+  (:use [clj-protobuf.core])
+  (:use [clj-protobuf.test.schemas])
   (:use [clojure.test])
   (:import (com.google.protobuf CodedOutputStream ByteString)))
 

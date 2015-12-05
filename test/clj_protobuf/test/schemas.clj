@@ -1,4 +1,4 @@
-(ns app.test.schemas)
+(ns clj-protobuf.test.schemas)
 
 (def schema-trivial
   [{:type :message
