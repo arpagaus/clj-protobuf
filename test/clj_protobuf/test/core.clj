@@ -99,7 +99,6 @@
   (is (= (seq (unchecked-byte-array [0x0a 0x01 0x61])) (protobuf-dump-attribute-single :string "a")))
   (is (= (seq (unchecked-byte-array [0x0a 0x01 0x62])) (protobuf-dump-attribute-single :string "b")))
   (is (= (seq (unchecked-byte-array [0x0a 0x03 0x61 0x62 0x63])) (protobuf-dump-attribute-single :string "abc")))
-  (is (= (seq (unchecked-byte-array [0x0a 0x03 0x61 0x62 0x63])) (protobuf-dump-attribute-single :string "abc")))
   (is (= (seq (unchecked-byte-array [0x0a 0x01 0x00])) (protobuf-dump-attribute-single :bytes (unchecked-byte-array [0x00]))))
   (is (= (seq (unchecked-byte-array [0x0a 0x04 0xca 0xfe 0xba 0xbe])) (protobuf-dump-attribute-single :bytes (unchecked-byte-array [0xca 0xfe 0xba 0xbe]))))
   )
