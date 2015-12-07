@@ -2,10 +2,4 @@
 name: "Any One"
 age: 88
 email: "any.one@anywhere.com"
-phone {
-	number: "123456789"
-}
-phone {
-	number: "987654321"
-}
-
+personType: CUSTOMER
