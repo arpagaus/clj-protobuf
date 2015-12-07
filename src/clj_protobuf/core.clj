@@ -19,6 +19,7 @@
     :bool (CodedOutputStream/computeBoolSize tag value)
     :string (CodedOutputStream/computeStringSize tag value)
     :bytes (CodedOutputStream/computeBytesSize tag (ByteString/copyFrom value))
+    :enum (CodedOutputStream/computeEnumSize tag value)
     ))
 
 (defn protobuf-compute-size
