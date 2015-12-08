@@ -31,6 +31,7 @@
   (is (= 3 (protobuf-compute-size schema-simple (with-meta  {:name "a"} message-meta-person))))
   (is (= 5 (protobuf-compute-size schema-simple (with-meta  {:name "a" :age 127} message-meta-person))))
   (is (= 8 (protobuf-compute-size schema-simple (with-meta  {:name "xyz" :age 128} message-meta-person))))
+  (is (= 10 (protobuf-compute-size schema-intermediate (with-meta  {:name "xyz" :age 128 :personType :CUSTOMER} message-meta-person))))
   )
 
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"

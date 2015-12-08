@@ -22,6 +22,10 @@
     :enum (CodedOutputStream/computeEnumSize tag value)
     ))
 
+(defn protobuf-compute-enum-size
+  [schema tag value]
+  2) ;; TODO implement
+
 (defn protobuf-compute-size
   [schema message]
   (let [message-name (:message (meta message))
@@ -30,10 +34,14 @@
                                 (:content %))
                              schema)]
     (reduce +
-            (map (fn [x]
-                   (let [attribute-name (name x)
-                         attribute-schema (some #(when (= attribute-name (:name %)) %) message-schema)]
-                     (protobuf-compute-attribute-size (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message))))
+            (map (fn [attribute-key]
+                   (let [attribute-schema (some #(when (= (name attribute-key) (:name %)) %) message-schema)
+                         type (:type attribute-schema)
+                         tag (:tag attribute-schema)
+                         value (attribute-key message)]
+                     (case type
+                       :enum (protobuf-compute-enum-size schema tag value)
+                       (protobuf-compute-attribute-size type tag value))))
                  (keys message)))))
 
 (defn protobuf-dump-attribute
@@ -62,10 +70,10 @@
                                 (:content %))
                              schema)]
     (doall (map (fn [x]
-           (let [attribute-name (name x)
-                 attribute-schema (some #(when (= attribute-name (:name %)) %) message-schema)]
-             (protobuf-dump-attribute (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream)))
-         (keys message)))))
+                  (let [attribute-name (name x)
+                        attribute-schema (some #(when (= attribute-name (:name %)) %) message-schema)]
+                    (protobuf-dump-attribute (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream)))
+                (keys message)))))
 
 (defn protobuf-dump
   [schema message]
