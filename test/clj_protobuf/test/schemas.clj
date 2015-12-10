@@ -18,7 +18,7 @@
     :content [{:label :required :type :string :name "name" :tag 1}
               {:label :required :type :int32 :name "age" :tag 2}
               {:label :required :type :string :name "email" :tag 3}
-              {:label :optional :type :enum :name "personType" :tag 4}
+              {:label :optional :type :enum :name "personType" :tag 4 :type-name "PersonType"}
               {:name "PersonType" :type :enum
                :content [{:name "CUSTOMER" :tag 1}
                          {:name "PROSPECT" :tag 2}]}]}])
@@ -36,6 +36,7 @@
                                     {:name "HOME" :tag 3}]}
                          {:label :required :name "number" :type :string :tag 1}
                          {:label :required :name "type" :type "PhoneType" :tag 2}]}
+                         ;;{:label :required :name "type" :type :enum :tag 2 :type-name "PhoneType"}]} FIXME remo that's what it should look like
               {:label :repeated :name "phone" :type "Phone" :tag 4}]}
    {:type :message
     :name "AnyMessage"
