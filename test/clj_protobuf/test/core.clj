@@ -69,7 +69,6 @@
   (is (= 5 (protobuf-compute-attribute-size :string 1 "äb")))
   (is (= 3 (protobuf-compute-attribute-size :bytes 1 (unchecked-byte-array [0xff]))))
   (is (= 4 (protobuf-compute-attribute-size :bytes 1 (unchecked-byte-array [0xff 0xee]))))
-  (is (= 2 (protobuf-compute-attribute-size :enum 1 1)))
   )
 
 (defn protobuf-dump-attribute-single

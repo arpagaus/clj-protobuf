@@ -19,12 +19,12 @@
     :bool (CodedOutputStream/computeBoolSize tag value)
     :string (CodedOutputStream/computeStringSize tag value)
     :bytes (CodedOutputStream/computeBytesSize tag (ByteString/copyFrom value))
-    :enum (CodedOutputStream/computeEnumSize tag value)
+    nil
     ))
 
 (defn protobuf-compute-enum-size
   [schema enum-name tag value]
-  (let [enum-schema (some #(when (and (= enum-name (:name %)) (= :enum (:type %))) %) schema) ;; TODO implement "PersonType" as parameter
+  (let [enum-schema (some #(when (and (= enum-name (:name %)) (= :enum (:type %))) %) schema)
         enum-schema-entry (some #(when (= (name value) (:name %)) %) (:content enum-schema))]
     (CodedOutputStream/computeEnumSize tag (:tag enum-schema-entry))))
 
@@ -41,9 +41,8 @@
                          type (:type attribute-schema)
                          tag (:tag attribute-schema)
                          value (attribute-key message)]
-                     (case type
-                       :enum (protobuf-compute-enum-size message-schema (:type-name attribute-schema) tag value)
-                       (protobuf-compute-attribute-size type tag value))))
+                     (or (protobuf-compute-attribute-size type tag value)
+                         (protobuf-compute-enum-size message-schema type tag value))))
                  (keys message)))))
 
 (defn protobuf-dump-attribute
