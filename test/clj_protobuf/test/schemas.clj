@@ -41,3 +41,8 @@
     :name "AnyMessage"
     :content [{:label :required :name "anystring" :type :string :tag 1}]}
    ])
+
+(def schema-enum-trivial
+  [{:name "PersonType" :type :enum
+    :content [{:name "CUSTOMER" :tag 1}
+              {:name "PROSPECT" :tag 2}]}])

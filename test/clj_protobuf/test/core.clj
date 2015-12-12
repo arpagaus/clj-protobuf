@@ -71,6 +71,9 @@
   (is (= 4 (protobuf-compute-attribute-size :bytes 1 (unchecked-byte-array [0xff 0xee]))))
   )
 
+(deftest protobuf-compute-enum-size-test
+  (is (= 2 (protobuf-compute-enum-size schema-enum-trivial "PersonType" 1 :CUSTOMER))))
+
 (defn protobuf-dump-attribute-single
   "Encodes any given value for a single attribute to a byte buffer, assuming tag < 16"
   [type value]
@@ -105,4 +108,4 @@
   )
 
 ;; Only used in Ligth Table. As a result Leinigen runs tests twice.
-;;(run-tests)
+(run-tests)
