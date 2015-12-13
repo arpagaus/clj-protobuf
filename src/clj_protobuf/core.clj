@@ -63,6 +63,12 @@
     :bytes (.writeBytes stream tag (ByteString/copyFrom value))
     ))
 
+(defn protobuf-dump-enum
+  [schema enum-name tag value stream]
+  (let [enum-schema (some #(when (and (= enum-name (:name %)) (= :enum (:type %))) %) schema)
+        enum-schema-entry (some #(when (= (name value) (:name %)) %) (:content enum-schema))]
+    (.writeEnum stream tag (:tag enum-schema-entry))))
+
 (defn protobuf-dump-stream
   [schema message stream]
   (let [message-name (:message (meta message))

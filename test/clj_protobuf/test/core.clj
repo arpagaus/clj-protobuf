@@ -108,4 +108,4 @@
   )
 
 ;; Only used in Ligth Table. As a result Leinigen runs tests twice.
-(run-tests)
+;;(run-tests)
