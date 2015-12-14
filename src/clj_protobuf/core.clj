@@ -47,7 +47,7 @@
 
 (defn protobuf-dump-attribute
   [type tag value stream]
-  (case type
+  (not (case type
     :double (.writeDouble stream tag value)
     :float (.writeFloat stream tag value)
     :int32 (.writeInt32 stream tag value)
@@ -61,7 +61,8 @@
     :bool (.writeBool stream tag value)
     :string (.writeString stream tag value)
     :bytes (.writeBytes stream tag (ByteString/copyFrom value))
-    ))
+         true
+    )))
 
 (defn protobuf-dump-enum
   [schema enum-name tag value stream]
@@ -79,7 +80,8 @@
     (doall (map (fn [x]
                   (let [attribute-name (name x)
                         attribute-schema (some #(when (= attribute-name (:name %)) %) message-schema)]
-                    (protobuf-dump-attribute (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream)))
+                   (or (protobuf-dump-attribute (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream)
+                       (protobuf-dump-enum message-schema (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream))))
                 (keys message)))))
 
 (defn protobuf-dump
