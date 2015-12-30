@@ -39,6 +39,7 @@
   (is (= 5 (protobuf-compute-size schema-simple "Person"  {:name "a" :age 127})))
   (is (= 8 (protobuf-compute-size schema-simple "Person"  {:name "xyz" :age 128})))
   (is (= 10 (protobuf-compute-size schema-intermediate "Person"  {:name "xyz" :age 128 :personType :CUSTOMER})))
+  ;;(is (= 10 (protobuf-compute-size schema-advanced "Person"  {:name "xyz" :age 128 :personType :CUSTOMER})))
   )
 
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
@@ -115,4 +116,4 @@
   )
 
 ;; Only used in Ligth Table. As a result Leinigen runs tests twice.
-(run-tests)
+;;(run-tests)
