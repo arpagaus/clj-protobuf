@@ -15,32 +15,30 @@
 
 (def intermediate-data (unchecked-byte-array [0x0a 0x0d 0x52 0x65 0x6d 0x6f 0x20 0x41 0x72 0x70 0x61 0x67 0x61 0x75 0x73 0x10 0x71 0x1a 0x17 0x61 0x72 0x70 0x61 0x67 0x61 0x75 0x73 0x2e 0x72 0x65 0x6d 0x6f 0x40 0x67 0x6d 0x61 0x69 0x6c 0x2e 0x63 0x6f 0x6d 0x20 0x02]))
 
-(def message-meta-person {:message "Person"})
-
 (deftest protobuf-dump-trivial-test
   (is (= (seq trivial-data)
-         (protobuf-dump schema-trivial (with-meta {:age 150} message-meta-person)))))
+         (protobuf-dump schema-trivial "Person" {:age 150}))))
 
 (deftest protobuf-dump-simple-test
   (is (= (seq simple-data)
-         (protobuf-dump schema-simple (with-meta {:name "Remo Arpagaus"
-                                                  :age 113
-                                                  :email "arpagaus.remo@gmail.com"} message-meta-person)))))
+         (protobuf-dump schema-simple "Person" {:name "Remo Arpagaus"
+                                                :age 113
+                                                :email "arpagaus.remo@gmail.com"}))))
 
 (deftest protobuf-dump-intermediate-test
   (is (= (seq intermediate-data)
-         (protobuf-dump schema-intermediate (with-meta {:name "Remo Arpagaus"
-                                                  :age 113
-                                                  :email "arpagaus.remo@gmail.com"
-                                                  :personType :PROSPECT} message-meta-person)))))
+         (protobuf-dump schema-intermediate "Person" {:name "Remo Arpagaus"
+                                                      :age 113
+                                                      :email "arpagaus.remo@gmail.com"
+                                                      :personType :PROSPECT}))))
 
 (deftest protobuf-compute-size-test
-  (is (= 2 (protobuf-compute-size schema-trivial (with-meta {:age 127} message-meta-person))))
-  (is (= 3 (protobuf-compute-size schema-trivial (with-meta  {:age 128} message-meta-person))))
-  (is (= 3 (protobuf-compute-size schema-simple (with-meta  {:name "a"} message-meta-person))))
-  (is (= 5 (protobuf-compute-size schema-simple (with-meta  {:name "a" :age 127} message-meta-person))))
-  (is (= 8 (protobuf-compute-size schema-simple (with-meta  {:name "xyz" :age 128} message-meta-person))))
-  (is (= 10 (protobuf-compute-size schema-intermediate (with-meta  {:name "xyz" :age 128 :personType :CUSTOMER} message-meta-person))))
+  (is (= 2 (protobuf-compute-size schema-trivial "Person" {:age 127})))
+  (is (= 3 (protobuf-compute-size schema-trivial "Person"  {:age 128})))
+  (is (= 3 (protobuf-compute-size schema-simple "Person"  {:name "a"})))
+  (is (= 5 (protobuf-compute-size schema-simple "Person"  {:name "a" :age 127})))
+  (is (= 8 (protobuf-compute-size schema-simple "Person"  {:name "xyz" :age 128})))
+  (is (= 10 (protobuf-compute-size schema-intermediate "Person"  {:name "xyz" :age 128 :personType :CUSTOMER})))
   )
 
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"

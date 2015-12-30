@@ -29,9 +29,8 @@
     (CodedOutputStream/computeEnumSize tag (:tag enum-schema-entry))))
 
 (defn protobuf-compute-size
-  [schema message]
-  (let [message-name (:message (meta message))
-        message-schema (some #(when
+  [schema message-name message]
+  (let [message-schema (some #(when
                                 (= message-name (:name %))
                                 (:content %))
                              schema)]
@@ -48,21 +47,21 @@
 (defn protobuf-dump-attribute
   [type tag value stream]
   (not (case type
-    :double (.writeDouble stream tag value)
-    :float (.writeFloat stream tag value)
-    :int32 (.writeInt32 stream tag value)
-    :int64 (.writeInt64 stream tag value)
-    :uint32 (.writeUInt32 stream tag value)
-    :uint64 (.writeUInt64 stream tag value)
-    :sint32 (.writeSInt32 stream tag value)
-    :sint64 (.writeSInt64 stream tag value)
-    :fixed32 (.writeFixed32 stream tag value)
-    :fixed64 (.writeFixed64 stream tag value)
-    :bool (.writeBool stream tag value)
-    :string (.writeString stream tag value)
-    :bytes (.writeBytes stream tag (ByteString/copyFrom value))
+         :double (.writeDouble stream tag value)
+         :float (.writeFloat stream tag value)
+         :int32 (.writeInt32 stream tag value)
+         :int64 (.writeInt64 stream tag value)
+         :uint32 (.writeUInt32 stream tag value)
+         :uint64 (.writeUInt64 stream tag value)
+         :sint32 (.writeSInt32 stream tag value)
+         :sint64 (.writeSInt64 stream tag value)
+         :fixed32 (.writeFixed32 stream tag value)
+         :fixed64 (.writeFixed64 stream tag value)
+         :bool (.writeBool stream tag value)
+         :string (.writeString stream tag value)
+         :bytes (.writeBytes stream tag (ByteString/copyFrom value))
          true
-    )))
+         )))
 
 (defn protobuf-dump-enum
   [schema enum-name tag value stream]
@@ -71,23 +70,22 @@
     (.writeEnum stream tag (:tag enum-schema-entry))))
 
 (defn protobuf-dump-stream
-  [schema message stream]
-  (let [message-name (:message (meta message))
-        message-schema (some #(when
+  [schema message-name message stream]
+  (let [message-schema (some #(when
                                 (= message-name (:name %))
                                 (:content %))
                              schema)]
     (doall (map (fn [x]
                   (let [attribute-name (name x)
                         attribute-schema (some #(when (= attribute-name (:name %)) %) message-schema)]
-                   (or (protobuf-dump-attribute (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream)
-                       (protobuf-dump-enum message-schema (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream))))
+                    (or (protobuf-dump-attribute (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream)
+                        (protobuf-dump-enum message-schema (:type attribute-schema) (:tag attribute-schema) ((keyword attribute-name) message) stream))))
                 (keys message)))))
 
 (defn protobuf-dump
-  [schema message]
-  (let [buffer (byte-array (protobuf-compute-size schema message))
+  [schema message-name message]
+  (let [buffer (byte-array (protobuf-compute-size schema message-name message))
         output-stream (CodedOutputStream/newInstance buffer)]
     (do
-      (protobuf-dump-stream schema message output-stream)
+      (protobuf-dump-stream schema message-name message output-stream)
       (seq buffer))))
