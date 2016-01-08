@@ -3,7 +3,7 @@
 (def schema-trivial
   [{:type :message
     :name "Person"
-    :content [{:label :required :type :int32 :name "age" :tag 1}]}])
+    :content [{:label :required, :type :int32, :name "age", :tag 1}]}])
 
 (def schema-simple
   [{:name "Person"

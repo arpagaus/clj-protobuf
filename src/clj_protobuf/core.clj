@@ -26,7 +26,13 @@
   [schema enum-name tag value]
   (let [enum-schema (some #(when (and (= enum-name (:name %)) (= :enum (:type %))) %) schema)
         enum-schema-entry (some #(when (= (name value) (:name %)) %) (:content enum-schema))]
-    (CodedOutputStream/computeEnumSize tag (:tag enum-schema-entry))))
+   (if (not-empty enum-schema-entry) (CodedOutputStream/computeEnumSize tag (:tag enum-schema-entry)))))
+
+(defn protobuf-compute-message-size
+  [schema message-name tag value]
+  (let [message-schema (some #(when (and (= message-name (:name %)) (= :message (:type %))) %) schema)
+        message-schema-entry (some #(when (= (name value) (:name %)) %) (:content message-schema))]
+   0))
 
 (defn protobuf-compute-size
   [schema message-name message]
@@ -41,7 +47,8 @@
                          tag (:tag attribute-schema)
                          value (attribute-key message)]
                      (or (protobuf-compute-attribute-size type tag value)
-                         (protobuf-compute-enum-size message-schema type tag value))))
+                         (protobuf-compute-enum-size message-schema type tag value)
+                         (protobuf-compute-size ))))
                  (keys message)))))
 
 (defn protobuf-dump-attribute
