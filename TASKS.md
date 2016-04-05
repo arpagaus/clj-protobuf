@@ -1,12 +1,13 @@
 # Tasks
 
-- [ ] Implement ```protobuf-dump```
-  - [ ] Support Enums
+- [ ] Implement `protobuf-dump`
+  - [x] Support Enums
   - [ ] Support nested messages
-  - [ ] Support ```required```
-  - [ ] Support ```oneof```
+  - [ ] Support `repeated`
+  - [ ] Support `required`
+  - [ ] Support `oneof`
   - [ ] Support import of other packages
-- [ ] Implement ```protobuf-load```
+- [ ] Implement `protobuf-load`
 - [ ] Remove dependency to com.google.protobuf
 - [ ] Support for ClojureScript
 
@@ -14,6 +15,7 @@
 ## Type Scopes: Enums & messages
 Scope analogous to Java inner classes. Only upstream is visible. Inner messages / enums cannot be used.
 
+## Code from writing nested messages
 ```
   // Write embedded message
   writeTag(fieldNumber, WireFormat.WIRETYPE_LENGTH_DELIMITED);

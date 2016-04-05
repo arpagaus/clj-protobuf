@@ -41,7 +41,7 @@
   (is (= 10 (protobuf-compute-size schema-intermediate "Person" {:name "xyz", :age 128, :personType :CUSTOMER})))
   )
 
-(deftest protobuf-compute-message-size-test
+(deftest protobuf-compute-size-advanced-test
   (is (= 25 (protobuf-compute-size schema-advanced "Person" {:name "xyz", :age 128, :phone {:number "+0123456789" :type :HOME}})))
   )
 
