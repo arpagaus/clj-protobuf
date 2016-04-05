@@ -2,7 +2,7 @@
   (:use [clj-protobuf.core])
   (:use [clj-protobuf.test.schemas])
   (:use [clojure.test])
-  (:import (com.google.protobuf CodedOutputStream ByteString)))
+  (:import (com.google.protobuf CodedOutputStream)))
 
 (defn unchecked-byte-array
   "Creates a byte array for a given list of bytes"
@@ -21,25 +21,28 @@
 
 (deftest protobuf-dump-simple-test
   (is (= (seq simple-data)
-         (protobuf-dump schema-simple "Person" {:name "Remo Arpagaus"
-                                                :age 113
+         (protobuf-dump schema-simple "Person" {:name  "Remo Arpagaus"
+                                                :age   113
                                                 :email "arpagaus.remo@gmail.com"}))))
 
 (deftest protobuf-dump-intermediate-test
   (is (= (seq intermediate-data)
-         (protobuf-dump schema-intermediate "Person" {:name "Remo Arpagaus"
-                                                      :age 113
-                                                      :email "arpagaus.remo@gmail.com"
+         (protobuf-dump schema-intermediate "Person" {:name       "Remo Arpagaus"
+                                                      :age        113
+                                                      :email      "arpagaus.remo@gmail.com"
                                                       :personType :PROSPECT}))))
 
 (deftest protobuf-compute-size-test
   (is (= 2 (protobuf-compute-size schema-trivial "Person" {:age 127})))
-  (is (= 3 (protobuf-compute-size schema-trivial "Person"  {:age 128})))
-  (is (= 3 (protobuf-compute-size schema-simple "Person"  {:name "a"})))
-  (is (= 5 (protobuf-compute-size schema-simple "Person"  {:name "a" :age 127})))
-  (is (= 8 (protobuf-compute-size schema-simple "Person"  {:name "xyz" :age 128})))
-  (is (= 10 (protobuf-compute-size schema-intermediate "Person"  {:name "xyz" :age 128 :personType :CUSTOMER})))
-  (is (= 8 (protobuf-compute-size schema-advanced "Person"  {:name "xyz" :age 128, :phone {:number "+0123456789", :type :HOME}})))
+  (is (= 3 (protobuf-compute-size schema-trivial "Person" {:age 128})))
+  (is (= 3 (protobuf-compute-size schema-simple "Person" {:name "a"})))
+  (is (= 5 (protobuf-compute-size schema-simple "Person" {:name "a" :age 127})))
+  (is (= 8 (protobuf-compute-size schema-simple "Person" {:name "xyz" :age 128})))
+  (is (= 10 (protobuf-compute-size schema-intermediate "Person" {:name "xyz", :age 128, :personType :CUSTOMER})))
+  )
+
+(deftest protobuf-compute-message-size-test
+  (is (= 25 (protobuf-compute-size schema-advanced "Person" {:name "xyz", :age 128, :phone {:number "+0123456789" :type :HOME}})))
   )
 
 ;;type = "double" | "float" | "int32" | "int64" | "uint32" | "uint64"
@@ -114,6 +117,3 @@
   (is (= (seq (unchecked-byte-array [0x0a 0x01 0x00])) (protobuf-dump-attribute-single :bytes (unchecked-byte-array [0x00]))))
   (is (= (seq (unchecked-byte-array [0x0a 0x04 0xca 0xfe 0xba 0xbe])) (protobuf-dump-attribute-single :bytes (unchecked-byte-array [0xca 0xfe 0xba 0xbe]))))
   )
-
-;; Only used in Ligth Table. As a result Leinigen runs tests twice.
-(run-tests)

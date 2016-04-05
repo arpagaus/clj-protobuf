@@ -9,7 +9,7 @@
 
 (def schema-advanced-text (slurp "examples/advanced.proto"))
 
-;; does not really test anything, just if the protobuf-parser basically works
+; does not really test anything, just if the protobuf-parser basically works
 (deftest test-protobuf-parser
   (is (= ((protobuf-parser schema-simple-text) 0) :proto)))
 

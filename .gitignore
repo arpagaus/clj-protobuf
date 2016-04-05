@@ -13,3 +13,5 @@ pom.xml.asc
 *.swp
 *.orig
 *~
+.idea/
+*.iml

@@ -3,6 +3,8 @@
 
 (defn protobuf-load [data] 5)
 
+(def protobuf-compute-size)
+
 (defn protobuf-compute-attribute-size
   [type tag value]
   (case type
@@ -30,16 +32,17 @@
 
 (defn protobuf-compute-message-size
   [schema message-name tag value]
-  (let [message-schema (some #(when (and (= message-name (:name %)) (= :message (:type %))) %) schema)
-        message-schema-entry (println message-schema message-name)]
-    (let [message-size (protobuf-compute-size message-schema message-name value)]
-      1)))
+  (let [message-schema (some #(when (and (= message-name (:name %)) (= :message (:type %))) %) schema)]
+    (let [message-size (protobuf-compute-size (vector message-schema) message-name value)]
+      (+ (CodedOutputStream/computeTagSize tag)
+         (CodedOutputStream/computeRawVarint32Size message-size)
+         message-size))))
 
 (defn protobuf-compute-size
   [schema message-name message]
   (let [message-schema (some #(when
-                                (= message-name (:name %))
-                                (:content %))
+                               (= message-name (:name %))
+                               (:content %))
                              schema)]
     (reduce +
             (map (fn [attribute-key]
@@ -49,7 +52,7 @@
                          value (attribute-key message)]
                      (or (protobuf-compute-attribute-size type tag value)
                          (protobuf-compute-enum-size message-schema type tag value)
-                         (protobuf-compute-message-size  message-schema type tag value))))
+                         (protobuf-compute-message-size message-schema type tag value))))
                  (keys message)))))
 
 (defn protobuf-dump-attribute
@@ -80,8 +83,8 @@
 (defn protobuf-dump-stream
   [schema message-name message stream]
   (let [message-schema (some #(when
-                                (= message-name (:name %))
-                                (:content %))
+                               (= message-name (:name %))
+                               (:content %))
                              schema)]
     (doall (map (fn [x]
                   (let [attribute-name (name x)
