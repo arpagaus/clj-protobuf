@@ -3,6 +3,10 @@
 
 (defn protobuf-load [data] 5)
 
+(defn find-first
+  [schema name type]
+  (some #(when (and (= name (:name %)) (= type (:type %))) %) schema))
+
 (def protobuf-compute-size)
 
 (defn protobuf-compute-attribute-size
@@ -26,13 +30,13 @@
 
 (defn protobuf-compute-enum-size
   [schema enum-name tag value]
-  (let [enum-schema (some #(when (and (= enum-name (:name %)) (= :enum (:type %))) %) schema)
+  (let [enum-schema (find-first schema enum-name :enum)
         enum-schema-entry (some #(when (= (name value) (:name %)) %) (:content enum-schema))]
     (if (not-empty enum-schema-entry) (CodedOutputStream/computeEnumSize tag (:tag enum-schema-entry)))))
 
 (defn protobuf-compute-message-size
   [schema message-name tag value]
-  (let [message-schema (some #(when (and (= message-name (:name %)) (= :message (:type %))) %) schema)]
+  (let [message-schema (find-first schema message-name :message)]
     (let [message-size (protobuf-compute-size (vector message-schema) message-name value)]
       (+ (CodedOutputStream/computeTagSize tag)
          (CodedOutputStream/computeRawVarint32Size message-size)
@@ -76,7 +80,7 @@
 
 (defn protobuf-dump-enum
   [schema enum-name tag value stream]
-  (let [enum-schema (some #(when (and (= enum-name (:name %)) (= :enum (:type %))) %) schema)
+  (let [enum-schema (find-first schema enum-name :enum)
         enum-schema-entry (some #(when (= (name value) (:name %)) %) (:content enum-schema))]
     (.writeEnum stream tag (:tag enum-schema-entry))))
 
