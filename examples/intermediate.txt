@@ -1,5 +1,4 @@
-
-name: "Any One"
-age: 88
-email: "any.one@anywhere.com"
-personType: CUSTOMER
+name: "Remo Arpagaus"
+age: 113
+email: "arpagaus@users.noreply.github.com"
+personType : PROSPECT

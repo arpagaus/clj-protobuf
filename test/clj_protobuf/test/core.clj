@@ -9,11 +9,18 @@
   [bytes]
   (byte-array (map unchecked-byte bytes)))
 
-(def trivial-data (unchecked-byte-array [0x08 0x96 0x01]))
+  (defn slurp-bytes
+    "Slurp the bytes from a slurpable thing"
+    [x]
+    (with-open [out (java.io.ByteArrayOutputStream.)]
+      (clojure.java.io/copy (clojure.java.io/input-stream x) out)
+      (.toByteArray out)))
 
-(def simple-data (unchecked-byte-array [0x0a 0x0d 0x52 0x65 0x6d 0x6f 0x20 0x41 0x72 0x70 0x61 0x67 0x61 0x75 0x73 0x10 0x71 0x1a 0x17 0x61 0x72 0x70 0x61 0x67 0x61 0x75 0x73 0x2e 0x72 0x65 0x6d 0x6f 0x40 0x67 0x6d 0x61 0x69 0x6c 0x2e 0x63 0x6f 0x6d]))
+(def trivial-data (slurp-bytes "file:./examples/trivial.bin"))
 
-(def intermediate-data (unchecked-byte-array [0x0a 0x0d 0x52 0x65 0x6d 0x6f 0x20 0x41 0x72 0x70 0x61 0x67 0x61 0x75 0x73 0x10 0x71 0x1a 0x17 0x61 0x72 0x70 0x61 0x67 0x61 0x75 0x73 0x2e 0x72 0x65 0x6d 0x6f 0x40 0x67 0x6d 0x61 0x69 0x6c 0x2e 0x63 0x6f 0x6d 0x20 0x02]))
+(def simple-data (slurp-bytes "file:./examples/simple.bin"))
+
+(def intermediate-data (slurp-bytes "file:./examples/intermediate.bin"))
 
 (deftest protobuf-dump-trivial-test
   (is (= (seq trivial-data)
@@ -23,13 +30,13 @@
   (is (= (seq simple-data)
          (protobuf-dump schema-simple "Person" {:name  "Remo Arpagaus"
                                                 :age   113
-                                                :email "arpagaus.remo@gmail.com"}))))
+                                                :email "arpagaus@users.noreply.github.com"}))))
 
 (deftest protobuf-dump-intermediate-test
   (is (= (seq intermediate-data)
          (protobuf-dump schema-intermediate "Person" {:name       "Remo Arpagaus"
                                                       :age        113
-                                                      :email      "arpagaus.remo@gmail.com"
+                                                      :email      "arpagaus@users.noreply.github.com"
                                                       :personType :PROSPECT}))))
 
 (deftest protobuf-compute-size-test

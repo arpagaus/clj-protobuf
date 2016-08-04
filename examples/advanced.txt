@@ -1,13 +1,7 @@
-
-name: "Any One"
-age: 88
+name: "xyz"
+age: 128
 email: "any.one@anywhere.com"
 phone {
-	number: "123456789"
-	type: 1
+	number: "+0123456789"
+	type: HOME
 }
-phone {
-	number: "987654321"
-	type: 2
-}
-
